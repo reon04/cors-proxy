@@ -9,6 +9,10 @@ from flask import Flask, Response, request
 app = Flask(__name__)
 
 BLOCKED_NETWORKS = [
+  ipaddress.ip_network(network.strip())
+  for network in os.environ.get("BLOCKED_NETWORKS", "").split(",")
+  if network.strip()
+] + [
   ipaddress.ip_network("127.0.0.0/8"),
   ipaddress.ip_network("10.0.0.0/8"),
   ipaddress.ip_network("172.16.0.0/12"),
@@ -21,9 +25,9 @@ BLOCKED_NETWORKS = [
 ]
 
 ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in os.environ.get("ALLOWED_ORIGINS", "").split(",")
-    if origin.strip()
+  origin.strip()
+  for origin in os.environ.get("ALLOWED_ORIGINS", "").split(",")
+  if origin.strip()
 ]
 
 
@@ -97,7 +101,7 @@ def index():
 @app.route("/<path:target>", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 def proxy(target):
   if not is_allowed_origin():
-    return "Missing or blocked Origin", 403
+    return f"Missing or blocked Origin ({request.headers.get('Origin')})", 403
   
   if request.method == "OPTIONS":
     response = Response(status=204)
