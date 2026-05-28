@@ -35,7 +35,7 @@ services:
 
 By default, the proxy blocks requests to local and private networks to help prevent SSRF attacks. BLOCKED_NETWORKS can be used to define additional target networks that should be denied (e.g. the external IP network of the server on which the proxy is deployed). ALLOWED_ORIGINS can be used to limit which browser origins are allowed to access the proxy.
 
-### Envirionment Variables
+### Environment Variables
 
 Env  | Default | Description
 ---- | ------- | -----------
